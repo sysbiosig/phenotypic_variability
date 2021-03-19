@@ -1,4 +1,4 @@
-# Topolewski_2021
+# phenotypic_variability
 The data sets and scripts for figure reproducing of a paper:
 
 "Phenotypic variability and not noise accounts for most of the cell-to-cell
