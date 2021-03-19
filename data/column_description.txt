@@ -1,0 +1,44 @@
+Description of columns of data sets used in a paper:
+"Phenotypic variability and not noise accounts for most of the cell-to-cell
+heterogeneity in cytokine signaling", Topolewski et al. 2021
+
+General columns occuring in multiple data sets:
+
+- cell_type; either BJ or MEF
+- replicate; the specific id of the replicate
+- stim_type; either IFNG (mouse interferon gamma) or OSM (human oncostatin M)
+- stim_level; a dose of the stimulation
+- stim_unit; all doses are in ng/mL
+- time; time since the beginning of cell stimulation to the cell fixation
+
+Columns specific for:
+
+# cytometry_paper.csv: data of pSTAT, STAT and receptor co-measurement on the flow cytometer
+- FSC.A; area forward scatter 
+- diameter; a diameter of a cell, calculated from the linear regression of size reference beads
+- volume; volume of a cell calculated from the diameter as (diameter/2)^3
+- phospho_STAT; either phospho-STAT1 (for IFNG stim_type) or phospho-STAT3 (for OSM stim_type) signal, volume-corrected
+- total_STAT; either STAT1 (for IFNG stim_type) or STAT3 (for OSM stim_type) signal, volume-corrected
+- receptor; either IFNGR1 (for IFNG stim_type) or OSMR (for OSM stim_type) signal, volume-corrected
+- whole_cell_phospho_STAT; either phospho-STAT1 (for IFNG stim_type) or phospho-STAT3 (for OSM stim_type) signal, without volume correction
+- whole_cell_total_STAT; either STAT1 (for IFNG stim_type) or STAT3 (for OSM stim_type) signal, without volume correction
+- whole_cell_receptor; either IFNGR1 (for IFNG stim_type) or OSMR (for OSM stim_type) signal, without volume correction
+
+# beads_paper.csv: data of size reference beads, used for linear regression to calculate the cell volume
+- FSC.A; area forward scatter 
+- sample_type; only one value "beads"
+- diameter; a diameter of bead provided by the manufacturer, in um, either 2, 4, 6, 10 or 15 um
+
+# fused_paper.csv: response data of two nuclei of bi-nuclear syncytia
+- ratio_dye_A; ratio of a dye A of both nuclei
+- ratio_dye_B; ratio of a dye B of both nuclei
+- merged_nuclei: either yes, if the nuclei are not assumed to be independent or not if opposite
+- nuclearity: bi-nuclear, as the data come from bi-nuclear syncytia
+- A; a response (pSTAT1 for IFNG and pSTAT3 for OSM) in the nucleus A
+- B; a response (pSTAT1 for IFNG and pSTAT3 for OSM) in the nucleus B
+
+# trajectories_paper.csv: response data of single-nuclear cells (no fusion performed) 
+# and bi-nuclear syncytia, but with each nuclei treated separately
+- merged_nuclei: either no, if the nuclei are assumed to be independent or NA if cell is single-nuclear
+- nuclearity: bi-nuclear, as the data come from bi-nuclear syncytia
+- response: a response (pSTAT1 for IFNG and pSTAT3 for OSM) in the nucleus
