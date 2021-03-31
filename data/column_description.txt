@@ -13,22 +13,6 @@ General columns occuring in multiple data sets:
 
 Columns specific for:
 
-# cytometry_paper.csv: data of pSTAT, STAT and receptor co-measurement on the flow cytometer
-- FSC.A; area forward scatter 
-- diameter; a diameter of a cell, calculated from the linear regression of size reference beads
-- volume; volume of a cell calculated from the diameter as (diameter/2)^3
-- phospho_STAT; either phospho-STAT1 (for IFNG stim_type) or phospho-STAT3 (for OSM stim_type) signal, volume-corrected
-- total_STAT; either STAT1 (for IFNG stim_type) or STAT3 (for OSM stim_type) signal, volume-corrected
-- receptor; either IFNGR1 (for IFNG stim_type) or OSMR (for OSM stim_type) signal, volume-corrected
-- whole_cell_phospho_STAT; either phospho-STAT1 (for IFNG stim_type) or phospho-STAT3 (for OSM stim_type) signal, without volume correction
-- whole_cell_total_STAT; either STAT1 (for IFNG stim_type) or STAT3 (for OSM stim_type) signal, without volume correction
-- whole_cell_receptor; either IFNGR1 (for IFNG stim_type) or OSMR (for OSM stim_type) signal, without volume correction
-
-# beads_paper.csv: data of size reference beads, used for linear regression to calculate the cell volume
-- FSC.A; area forward scatter 
-- sample_type; only one value "beads"
-- diameter; a diameter of bead provided by the manufacturer, in um, either 2, 4, 6, 10 or 15 um
-
 # fused_paper.csv: response data of two nuclei of bi-nuclear syncytia
 - ratio_dye_A; ratio of a dye A of both nuclei
 - ratio_dye_B; ratio of a dye B of both nuclei

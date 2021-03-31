@@ -412,7 +412,7 @@ confusion.matrix.gamma <- function(data,
   }
   
   
-  CM=CMloop/length(percentiles) # why do we divide? to average over all percentiles
+  CM=CMloop/length(percentiles) 
   colnames(CM) <- Uss
   rownames(CM) <- Uss
   CM.pt <- melt(CM)
