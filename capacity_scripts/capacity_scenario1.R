@@ -7,8 +7,9 @@
 ## scenario 1: Population response distributions ##
 
 #### loading libraries and functions ####
-library(SLEMI)
 library(dplyr)
+#install the SLEMI package according to https://github.com/sysbiosig/SLEMI
+library(SLEMI) 
 
 #### set-up of directories ####
 base.path <- "D:/Piotrek/publications/syncytia_noise/phenotypic_variability"

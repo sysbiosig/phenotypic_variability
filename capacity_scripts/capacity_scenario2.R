@@ -11,12 +11,14 @@ base.path <- "D:/Piotrek/publications/syncytia_noise/phenotypic_variability"
 input.path <- paste(base.path, "/data", sep = "")
 
 #### loading libraries and functions ####
-# first load all required custom functions: 
+library(dplyr)
+
+#install the SLEMI package according to https://github.com/sysbiosig/SLEMI
+library(SLEMI) 
 
 get.single.percentile.capacity <- function(distribution.type,
                                            distribution.parameters, 
-                                           n.sampled,
-                                           ){
+                                           n.sampled){
   # a function to calculate channel capacity for n.sampled values 
   # sampled from distribution.type which has given distribution.parameters. 
   # The level of input (stimulations) is given by the distribution.parameters argument:
@@ -24,8 +26,6 @@ get.single.percentile.capacity <- function(distribution.type,
   # - each colum to specific distribution parameter (has to be two columns in total);
   # only "gamma" or "lognormal" values allowed for distribution.type
 
-  library(SLEMI)
-  
   stim.level.n = nrow(distribution.parameters)
   all.stim.data <- data.frame()
   if(distribution.type == "gamma"){
@@ -121,7 +121,7 @@ get.all.percentile.capacity <- function(data,
       if(continuous == "FALSE"){
         
         capacities = c(capacities, 
-                       get.single.percentile.capacity(distribution.parameters =ldlist[[k]], 
+                       get.single.percentile.capacity(distribution.parameters = ldlist[[k]], 
                                                       n.sampled = 
                                                         n.sampled,
                                                       distribution.type = 
