@@ -12,11 +12,18 @@ input.path <- paste(base.path, "/data", sep = "")
 
 #### loading libraries and functions ####
 # first load all required custom functions: 
-source(paste(base.path, "/Topolewski_auxillary_functions.R", sep = ""))
 
-get.single.percentile.capacity <- function(distribution.parameters, 
+get.single.percentile.capacity <- function(distribution.type,
+                                           distribution.parameters, 
                                            n.sampled,
-                                           distribution.type){
+                                           ){
+  # a function to calculate channel capacity for n.sampled values 
+  # sampled from distribution.type which has given distribution.parameters. 
+  # The level of input (stimulations) is given by the distribution.parameters argument:
+  # - each row of distribution.parameters correspond to differenet input level; 
+  # - each colum to specific distribution parameter (has to be two columns in total);
+  # only "gamma" or "lognormal" values allowed for distribution.type
+
   library(SLEMI)
   
   stim.level.n = nrow(distribution.parameters)
@@ -96,8 +103,8 @@ get.all.percentile.capacity <- function(data,
       ld = matrix(0, length(Uss), 2)
       for(l in 1:length(Uss)){
         mean.log = log(D[[l]][k]^2 / (D[[l]][k]^2 + (sd.coefficient * D[[l]][k])^2)^0.5)
-        sd.log = log(1+((sd.coefficient * D[[l]][k])^2 / D[[l]][k]^2))
-        ld[l,] = c(mean.log, sd.log) # to be provided
+        sd.log = (log(1+((sd.coefficient * D[[l]][k])^2 / D[[l]][k]^2))^0.5)
+        ld[l,] = c(mean.log, sd.log)
         ldlist[[k]]=ld
       }
       
@@ -132,8 +139,22 @@ get.all.percentile.capacity <- function(data,
   } else {
     return("Too low sample number!")
   }
-  return(list(capacity = capacity))
+  return(capacity)
   
+}
+
+sd.AB <- function(A, B){
+  # function to calculate sd from two df.columns, 
+  # representing signal in the nucleus A and B
+  if(length(A) != length(B)){
+    break()
+  }
+  sd <- c()
+  for(i in 1:length(A)){
+    mean <- (A[i] + B[i])/2 
+    sd[i] <- (((A[i]-mean)^2 + (B[i]-mean)^2)/2)^0.5
+  }
+  return(sd)
 }
 
 
@@ -174,14 +195,14 @@ for(stim.type.chosen in chosen.stimulants){
                                  dplyr::filter(stim_type == stim.type.chosen) %>%
                                  select(a))
   
-  
-  stimulant.gamma.capacity <- 
+
+  stimulant.gamma.capacity <-
     get.all.percentile.capacity(data = bio.traj,
                                 stim_type_chosen = stim.type.chosen,
                                 time.chosen = time.chosen,
                                 sd.coefficient = sd.coefficient,
                                 percentiles = seq(0.05, 0.95, by = 0.01),
-                                n.sampled = 100,
+                                n.sampled = 1000,
                                 continuous = FALSE,
                                 distribution.type = "gamma")
   
@@ -191,7 +212,7 @@ for(stim.type.chosen in chosen.stimulants){
                                 time.chosen = time.chosen,
                                 sd.coefficient = sd.coefficient,
                                 percentiles = seq(0.05, 0.95, by = 0.01),
-                                n.sampled = 100,
+                                n.sampled = 1000,
                                 continuous = FALSE,
                                 distribution.type = "lognormal")
   

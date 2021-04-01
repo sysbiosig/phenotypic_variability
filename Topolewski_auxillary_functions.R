@@ -121,6 +121,8 @@ noise.decompose <- function(data,
 
 
 sd.AB <- function(A, B){
+  # function to calculate sd from two df.columns, 
+  # representing signal in the nucleus A and B 
   if(length(A) != length(B)){
     break()
   }
