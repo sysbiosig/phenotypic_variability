@@ -6,10 +6,6 @@
 
 ## scenario 1: Population response distributions ##
 
-#### set-up of directories ####
-base.path <- "D:/Piotrek/publications/syncytia_noise/phenotypic_variability"
-input.path <- paste(base.path, "/data", sep = "")
-
 #### loading libraries and functions ####
 library(dplyr)
 
@@ -64,8 +60,6 @@ get.single.percentile.capacity <- function(distribution.type,
 }
 
 get.all.percentile.capacity <- function(data,
-                                        time.chosen,
-                                        stim_type_chosen,
                                         sd.coefficient,
                                         percentiles = seq(0.05,0.95,by=0.01),
                                         n.sampled = 1000,
@@ -79,9 +73,7 @@ get.all.percentile.capacity <- function(data,
   Uss <- sort(unique(data$stim_level))
   for (ss in sort(Uss)){# for every stimulation level ss
     X_S=data %>% 
-      dplyr::filter(stim_level == ss,
-                    time == time.chosen,
-                    stim_type == stim_type_chosen) 
+      dplyr::filter(stim_level == ss) 
     D[[i]] <- quantile(X_S$response,percentiles);
     i=i+1
   }
@@ -92,7 +84,7 @@ get.all.percentile.capacity <- function(data,
     for(k in 1:length(percentiles)){
       ld = matrix(0, length(Uss), 2)
       for(l in 1:length(Uss)){
-        ld[l,] = c(1/sd.coefficient^2,1 / (sd.coefficient^2*D[[l]][k]))
+        ld[l,] = c(1/sd.coefficient^2, 1 / (sd.coefficient^2*D[[l]][k]))
         ldlist[[k]]=ld
       }
       
@@ -103,34 +95,39 @@ get.all.percentile.capacity <- function(data,
       ld = matrix(0, length(Uss), 2)
       for(l in 1:length(Uss)){
         mean.log = log(D[[l]][k]^2 / (D[[l]][k]^2 + (sd.coefficient * D[[l]][k])^2)^0.5)
-        sd.log = (log(1+((sd.coefficient * D[[l]][k])^2 / D[[l]][k]^2))^0.5)
+        sd.log = (log(1+((sd.coefficient * D[[l]][k])^2 / D[[l]][k]^2)))^0.5
         ld[l,] = c(mean.log, sd.log)
         ldlist[[k]]=ld
       }
-      
     }
   } else {
     return("wrong distribution type, either gamma or lognormal possible")
   }
   
   if(n.sampled >= 1){
-    doses <- log10(c(0.01, 0.1, 1, 10))
+    doses <- log10(c(0.001, 0.1, 1, 10))
     capacities <- c()
     
     for(k in 1:length(percentiles)){
       if(continuous == "FALSE"){
         
         capacities = c(capacities, 
-                       get.single.percentile.capacity(distribution.parameters = ldlist[[k]], 
-                                                      n.sampled = 
-                                                        n.sampled,
-                                                      distribution.type = 
-                                                        distribution.type))
+                       get.single.percentile.capacity(
+                         distribution.parameters = ldlist[[k]], 
+                         n.sampled = 
+                           n.sampled,
+                         distribution.type = 
+                           distribution.type)
+        )
       } else if(continuous == "TRUE"){
+        rvec <- unlist(D)[seq(k, length(percentiles) * length(doses), by = length(percentiles))]
         capacities <- c(capacities,
-                        get.capacity.gamma.c(xvec = doses, 
-                                             rvec = 1/(ldlist[[k]][, 2] * sd.coefficient^2), 
-                                             sd.coefficient2 = sd.coefficient^2))
+                        get.single.percentile.capacity.cont(
+                          xvec = doses, 
+                          rvec = rvec, 
+                          sd.coefficient2 = sd.coefficient^2,
+                          distribution.type = distribution.type)
+        )
         
       } else {return("wrong continuous value, should be T/F")}
       
@@ -157,6 +154,10 @@ sd.AB <- function(A, B){
   return(sd)
 }
 
+
+#### set-up of directories ####
+base.path <- "D:/Piotrek/publications/syncytia_noise/phenotypic_variability"
+input.path <- paste(base.path, "/data", sep = "")
 
 #### data loading ####
 bio.AB <- read.csv(paste(input.path,
@@ -195,11 +196,12 @@ for(stim.type.chosen in chosen.stimulants){
                                  dplyr::filter(stim_type == stim.type.chosen) %>%
                                  select(a))
   
-
+  bio.for.capacity <- bio.traj %>%
+    dplyr::filter(time == time.chosen &
+                    stim_type == stim.type.chosen)
+  
   stimulant.gamma.capacity <-
-    get.all.percentile.capacity(data = bio.traj,
-                                stim_type_chosen = stim.type.chosen,
-                                time.chosen = time.chosen,
+    get.all.percentile.capacity(data = bio.for.capacity,
                                 sd.coefficient = sd.coefficient,
                                 percentiles = seq(0.05, 0.95, by = 0.01),
                                 n.sampled = 1000,
@@ -207,9 +209,7 @@ for(stim.type.chosen in chosen.stimulants){
                                 distribution.type = "gamma")
   
   stimulant.log.capacity <-
-    get.all.percentile.capacity(data = bio.traj,
-                                stim_type_chosen = stim.type.chosen,
-                                time.chosen = time.chosen,
+    get.all.percentile.capacity(data = bio.for.capacity,
                                 sd.coefficient = sd.coefficient,
                                 percentiles = seq(0.05, 0.95, by = 0.01),
                                 n.sampled = 1000,
