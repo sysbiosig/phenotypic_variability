@@ -44,10 +44,11 @@ for(stim.type.chosen in chosen.stimulants.AB){
   bio.plot <- bio.AB %>%
     dplyr::filter(merged_nuclei == merge.chosen &
                     stim_type == stim.type.chosen)
+    
   
   decom.fold <- noise.decompose.boot(data = bio.plot,
                                      n = 1,
-                                     boot.no = 1000,
+                                     boot.no = 100,
                                      estimator = "sd",
                                      colname.A = "A",
                                      colname.B = "B",
@@ -63,10 +64,10 @@ for(stim.type.chosen in chosen.stimulants.AB){
     geom_point(data = bio.plot,
                aes(x = A,
                    y = B,
-                   color = factor(stim_level)),
+                   color = factor(stim_level),
+                   shape = replicate),
                alpha = alpha,
-               size = size,
-               shape = shape)+
+               size = size)+
     geom_text(data = decom.fold,
               parse = TRUE,
               x = x.text,
@@ -85,7 +86,8 @@ for(stim.type.chosen in chosen.stimulants.AB){
               size = 3.25)+
     geom_abline(slope = 1, linetype = 2, color = "grey40")+
     theme_trajectories(aspect.ratio = 1)+
-    theme(axis.text=element_text(size=6))+
+    theme(axis.text=element_text(size=6),
+          legend.position = "bottom")+
     facet_grid(.~stim_level)+
     scale_color_manual(values = my.pal,
                        guide = "none")+
@@ -93,10 +95,13 @@ for(stim.type.chosen in chosen.stimulants.AB){
                        breaks = breaks,
                        limits = limits,
                        name = "nucleus A response [a.u.]")+
+    scale_shape_manual(values = c(6, 16),
+                       guide = NULL)+
     scale_y_continuous(expand = c(0, 0),
                        breaks = breaks,
                        limits = limits,
                        name = "nucleus B response [a.u.]")
+  plots[[paste(stim.type.chosen, "_scatter", sep = "")]] 
 }
 
 
@@ -104,7 +109,7 @@ arranged.plots <- arrangeGrob(grobs = plots, layout_matrix = rbind(c(1, 1, 1),
                                                                    c(2, 2, 2)))
 
 width <- 7.5
-height <- 5
+height <- 7
 filename_suffix <- "Figure_2.pdf"
 
 
