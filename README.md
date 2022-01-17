@@ -38,7 +38,7 @@ If problem occurs, the following CRAN packages can be installed via:
 - capacity_scripts: containing scripts for channel capacity calculations
 
 ## Base directory setting up
-It is recommended to run all scripts in "phenotypic_variability" R project, placed in the main directory, whichi assures the correct path structure. Otherwise, `base.path` has to be provided in each script
+It is recommended to run all scripts in "phenotypic_variability" R project, placed in the main directory, which assures the correct path structure. Otherwise, `base.path` has to be provided in each script
 
 ## Licence
 The repository is released under the GNU 3.0 licence and is freely available.
