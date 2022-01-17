@@ -7,7 +7,9 @@
 ## scenario 3: Single-cell noise response distributions with continuous input ##
 
 #### set-up of directories ####
-base.path <- "D:/Piotrek/publications/syncytia_noise/phenotypic_variability"
+# either provide a path to the main directory, 
+# or open the "phenotypic_variability" Rproject
+base.path <- getwd()
 input.path <- paste(base.path, "/data", sep = "")
 
 #### loading libraries and functions ####
