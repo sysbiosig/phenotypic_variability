@@ -1,4 +1,4 @@
-# A script for reproducing the Figure 2 of a paper:
+# A script for reproducing the Figure S4 of a paper:
 
 # "Phenotypic variability, not noise, accounts for most of the cell-to-cell
 # heterogeneity of selected cytokine-induced JAK-STAT signaling responses", 
@@ -13,56 +13,72 @@ source(paste(base.path, "/Topolewski_auxiliary_functions.R", sep = ""))
 # all code noted as "aux code" is first introduced in the above auxiliary file
 
 #### data loading ####
-merge.chosen <- "no"
-
 bio.AB <- read.csv(paste(input.path,
                          "/fused_paper.csv", sep = ""), 
                    header = TRUE, sep = ",")
 
-#### plotting Figure 2 ####
-chosen.stimulants.AB <- c("IFNG", "OSM")
+bio.AB <- bio.AB %>%
+  dplyr::filter(!((time %in% c(15) & stim_type == "IFNG" & stim_level %in% c(0.1, 1)) |
+                    (time %in% c(30) & stim_type == "OSM" & stim_level %in% c(0.1, 1))))
+
+# to present 0 on the facet as time point, annotate the data accordingly:
+bio.AB[bio.AB$stim_level == 0, "time"] <- 0
+bio.AB[bio.AB$stim_level == 0, "stim_level"] <- 10
+
+merge.chosen <- "no"
+
+#### grid ####
+set.seed(122)
 plots <- list()
-set.seed(12)
-for(stim.type.chosen in chosen.stimulants.AB){
+for(stim_type_chosen in c("IFNG", "OSM")){
   
-  if(stim.type.chosen == "IFNG"){
+  bio.plot <- bio.AB[bio.AB$merged_nuclei == merge.chosen &
+                       bio.AB$stim_type == stim_type_chosen, ]
+  
+  if(stim_type_chosen == "IFNG"){
     limits <- c(0, 60)
     x.text <- limits[1] + (limits[2] - limits[1])/30
     y.text <- limits[1] + (limits[2] - limits[1])*5/6
     breaks <- seq(limits[1], limits[2]-1, 20)
-    my.pal <- IFN.pal # aux code
-    time.chosen <- 15
-    ggtitle <- bquote("IFN-"*gamma ~ .(time.chosen)~"min")
-  } else if(stim.type.chosen == "OSM") {
+    my.pal <- IFN.pal[4]
+    
+    # to keep the facet size consistent, create an artificial facet, 
+    # which will be removed in further processing of a graph
+    art <- bio.plot[1,]
+    art$time <- NA
+    art$A <- NA
+    art$B <- NA
+    bio.plot <- rbind(bio.plot,
+                      art)
+    
+  } else if(stim_type_chosen == "OSM") {
     limits <- c(0, 40)
     x.text <- limits[1] + (limits[2] - limits[1])/30
     y.text <- limits[1] + (limits[2] - limits[1])*5/6
     breaks <- seq(limits[1], limits[2]-1, 15)
-    my.pal <- OSM.pal # aux code
-    time.chosen <- 30
-    ggtitle <- bquote("OSM" ~ .(time.chosen)~"ng/mL")
-  } 
-  bio.plot <- bio.AB %>%
-    dplyr::filter(merged_nuclei == merge.chosen &
-                    stim_type == stim.type.chosen &
-                    time == time.chosen)
-    
+    my.pal <- OSM.pal[4]
+  }
   
   decom.fold <- noise.decompose.boot(data = bio.plot,
                                      n = 1,
+                                     round.digits = 2,
                                      boot.no = 1000,
                                      estimator = "sd",
                                      colname.A = "A",
                                      colname.B = "B",
-                                     group.columns = c("stim_level",
-                                                       "time")) # aux code
+                                     group.columns = c("stim_level", 
+                                                       "time"))
+  
+  decom.fold$time <- as.numeric(as.character(decom.fold$time))
+  decom.fold$stim_level <- as.numeric(as.character(decom.fold$stim_level))
   
   alpha <- 1
   size <- 1.5
   shape <- 16
+  size.text <- 4
   
   
-  plots[[paste(stim.type.chosen, "_scatter", sep = "")]] <- ggplot()+
+  plots[[paste(stim_type_chosen, "_scatter", sep = "")]] <- ggplot()+
     geom_point(data = bio.plot,
                aes(x = A,
                    y = B,
@@ -88,39 +104,38 @@ for(stim.type.chosen in chosen.stimulants.AB){
               size = 3.25)+
     geom_abline(slope = 1, linetype = 2, color = "grey40")+
     theme_trajectories(aspect.ratio = 1)+
-    theme(axis.text=element_text(size=6),
-          legend.position = "bottom")+
-    facet_grid(.~stim_level)+
+    theme(axis.text=element_text(size=6))+
+    facet_grid(stim_level~time)+
+    scale_shape_manual(values = c(16, 6),
+                       guide = NULL)+
     scale_color_manual(values = my.pal,
                        guide = "none")+
     scale_x_continuous(expand = c(0, 0),
                        breaks = breaks,
                        limits = limits,
                        name = "nucleus A response [a.u.]")+
-    scale_shape_manual(values = c(16, 6),
-                       guide = NULL)+
     scale_y_continuous(expand = c(0, 0),
                        breaks = breaks,
                        limits = limits,
                        name = "nucleus B response [a.u.]")
-  plots[[paste(stim.type.chosen, "_scatter", sep = "")]] 
+  plots[[paste(stim_type_chosen, "_scatter", sep = "")]]
 }
 
-
-arranged.plots <- arrangeGrob(grobs = plots, layout_matrix = rbind(c(1, 1, 1),
-                                                                   c(2, 2, 2)))
-
-width <- 7.5
-height <- 7
-filename_suffix <- "Figure_2.pdf"
-
+arranged.plots <- arrangeGrob(grobs = plots, layout_matrix = rbind(c(1),
+                                                                   c(2)))
 
 path.to.save <- paste(base.path, "/figures", sep = "")
 push.dir(path.to.save) # aux code
+
+
+width <- 7.5
+height <- 6
+filename_suffix <- "Figure_S5.pdf"
 
 cairo_pdf(paste(path.to.save, "/",
                 filename_suffix, sep = ""),
           width = width, height = height)
 grid.arrange(arranged.plots)
 dev.off()
+
 

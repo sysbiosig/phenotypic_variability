@@ -1,11 +1,11 @@
 Description of columns of data sets used in a paper:
 "Phenotypic variability and not noise accounts for most of the cell-to-cell
-heterogeneity in cytokine signaling", Topolewski et al. 2021
+heterogeneity in cytokine signaling", Topolewski et al. 2022
 
 General columns occuring in multiple data sets:
 
 - cell_type; either BJ or MEF
-- replicate; the specific id of the replicate
+- replicate; the id of the replicate
 - stim_type; either IFNG (mouse interferon gamma) or OSM (human oncostatin M)
 - stim_level; a dose of the stimulation
 - stim_unit; all doses are in ng/mL

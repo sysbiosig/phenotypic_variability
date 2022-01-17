@@ -1,4 +1,4 @@
-#### A script with auxillary functions for a paper: ####
+#### A script with auxiliary functions for a paper: ####
 
 # "Phenotypic variability and not noise accounts for most of the cell-to-cell
 # heterogeneity in cytokine signaling", Topolewski et al. 2021
@@ -145,7 +145,8 @@ boot.AB <- function(data,
                     colname.A = "A",
                     colname.B = "B",
                     estimator,
-                    group.columns){
+                    group.columns,
+                    round.digits = 2){
   
   
   decom.all <- data.frame()
@@ -173,17 +174,17 @@ boot.AB <- function(data,
   if(estimator == "CI"){
     CI.data <- decom.all %>% 
       group_by_at(group.columns) %>%
-      summarise(CI_5_Icv = round(quantile(x = Icv, prob = 0.05), 2),
-                CI_95_Icv = round(quantile(x = Icv, prob = 0.95), 2),
-                CI_5_Ncv = round(quantile(x = Ncv, prob = 0.05), 2),
-                CI_95_Ncv = round(quantile(x = Ncv, prob = 0.95), 2))
+      summarise(CI_5_Icv = round(quantile(x = Icv, prob = 0.05), round.digits),
+                CI_95_Icv = round(quantile(x = Icv, prob = 0.95), round.digits),
+                CI_5_Ncv = round(quantile(x = Ncv, prob = 0.05), round.digits),
+                CI_95_Ncv = round(quantile(x = Ncv, prob = 0.95), round.digits))
   } else if(estimator == "sd"){
     CI.data <- decom.all %>% 
       group_by_at(group.columns) %>%
-      summarise(sd_Icv = round(sd(Icv), 2),
-                sd_Ncv = round(sd(Ncv), 2),
-                mean_Icv = round(mean(Icv), 2),
-                mean_Ncv = round(mean(Ncv), 2))
+      summarise(sd_Icv = round(sd(Icv), round.digits),
+                sd_Ncv = round(sd(Ncv), round.digits),
+                mean_Icv = round(mean(Icv), round.digits),
+                mean_Ncv = round(mean(Ncv), round.digits))
     
     
   }
@@ -196,6 +197,7 @@ noise.decompose.boot <- function(data,
                                  colname.A = "A",
                                  colname.B = "B",
                                  estimator,
+                                 round.digits = 2,
                                  group.columns = c("stim_level", "time")){
   
   art.boot <- boot.AB(data = data,
@@ -204,6 +206,7 @@ noise.decompose.boot <- function(data,
                       colname.A = colname.A,
                       colname.B = colname.B,
                       estimator = estimator,
+                      round.digits = round.digits,
                       group.columns = group.columns)
   
   bio.decompose <- noise.decompose(data = data,

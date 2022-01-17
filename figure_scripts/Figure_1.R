@@ -1,15 +1,16 @@
 # A script for reproducing the Figure 1 of a paper:
 
-# "Phenotypic variability and not noise accounts for most of the cell-to-cell
-# heterogeneity in cytokine signaling", Topolewski et al. 2021
+# "Phenotypic variability, not noise, accounts for most of the cell-to-cell
+# heterogeneity of selected cytokine-induced JAK-STAT signaling responses", 
+# Topolewski et al. 2021
 
 #### set-up of directories ####
 base.path <- "D:/Piotrek/publications/syncytia_noise/phenotypic_variability"
 input.path <- paste(base.path, "/data", sep = "")
 
 #### loading libraries and functions ####
-source(paste(base.path, "/Topolewski_auxillary_functions.R", sep = ""))
-# all code noted as "aux code" is first introduced in the above auxillary file
+source(paste(base.path, "/Topolewski_auxiliary_functions.R", sep = ""))
+# all code noted as "aux code" is first introduced in the above auxiliary file
 
 #### data loading ####
 bio.traj <- read.csv(paste(input.path,
@@ -69,7 +70,7 @@ for(stim.type.chosen in chosen.stimulants){
     scale_color_manual(values = my.pal,
                        name = "dose [ng/mL]")+
     scale_fill_manual(values = my.pal,
-                      guide = FALSE)+
+                      guide = "none")+
     theme_trajectories(aspect.ratio = 1)+
     theme(legend.position = c(x.text, y.text),
           legend.key.size = unit(4, "mm"))+
@@ -121,9 +122,9 @@ plots[["long"]] <- ggplot()+
                aes(x = response),
                alpha = 1)+
   scale_color_manual(values = my.pal,
-                     guide = FALSE)+
+                     guide = "none")+
   scale_fill_manual(values = my.pal,
-                    guide = FALSE)+
+                    guide = "none")+
   theme_trajectories(aspect.ratio = 1/2.5)+
   theme(legend.position = c(x.text, y.text))+
   coord_cartesian(xlim = x.limits,

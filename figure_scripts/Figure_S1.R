@@ -1,15 +1,16 @@
 # A script for reproducing the Figure S1 of a paper:
 
-# "Phenotypic variability and not noise accounts for most of the cell-to-cell
-# heterogeneity in cytokine signaling", Topolewski et al. 2021
+# "Phenotypic variability, not noise, accounts for most of the cell-to-cell
+# heterogeneity of selected cytokine-induced JAK-STAT signaling responses", 
+# Topolewski et al. 2021
 
 #### set-up of directories ####
 base.path <- "D:/Piotrek/publications/syncytia_noise/phenotypic_variability"
 input.path <- paste(base.path, "/data", sep = "")
 
 #### loading libraries and functions ####
-source(paste(base.path, "/Topolewski_auxillary_functions.R", sep = ""))
-# all code noted as "aux code" is first introduced in the above auxillary file
+source(paste(base.path, "/Topolewski_auxiliary_functions.R", sep = ""))
+# all code noted as "aux code" is first introduced in the above auxiliary file
 
 #### data loading ####
 merge.chosen <- "no"

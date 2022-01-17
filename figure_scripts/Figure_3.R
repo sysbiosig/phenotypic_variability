@@ -1,15 +1,16 @@
 # A script for reproducing the Figure 3 of a paper:
 
-# "Phenotypic variability and not noise accounts for most of the cell-to-cell
-# heterogeneity in cytokine signaling", Topolewski et al. 2021
+# "Phenotypic variability, not noise, accounts for most of the cell-to-cell
+# heterogeneity of selected cytokine-induced JAK-STAT signaling responses", 
+# Topolewski et al. 2021
 
 #### set-up of directories ####
 base.path <- "D:/Piotrek/publications/syncytia_noise/phenotypic_variability"
 input.path <- paste(base.path, "/data", sep = "")
 
 #### loading libraries and functions ####
-source(paste(base.path, "/Topolewski_auxillary_functions.R", sep = ""))
-# all code noted as "aux code" is first introduced in the above auxillary file
+source(paste(base.path, "/Topolewski_auxiliary_functions.R", sep = ""))
+# all code noted as "aux code" is first introduced in the above auxiliary file
 
 #### data loading ####
 bio.traj <- read.csv(paste(input.path,
@@ -60,7 +61,8 @@ for(stim.type.chosen in chosen.stimulants.AB){
   
   bio.sd <- bio.AB %>%
     dplyr::filter(merged_nuclei == merge.chosen,
-           stim_type == stim.type.chosen) %>%
+           stim_type == stim.type.chosen &
+             time == time.chosen) %>%
     mutate(sd = sd.AB(A, B), # aux code
            mean = (A + B)/2)
   
@@ -174,7 +176,7 @@ for(stim.type.chosen in chosen.stimulants.trajectory){
                size = 3)+
     scale_fill_manual(values = my.pal,
                       name = "dose [ng/mL]",
-                      guide = FALSE)+
+                      guide = "none")+
     scale_shape_manual(values = c(24, 23, 21),
                        limits = c("th95", "th50", "th5"),
                        name = "percentile",

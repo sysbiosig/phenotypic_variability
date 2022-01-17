@@ -1,15 +1,16 @@
 # A script for reproducing the Figure S2 of a paper:
 
-# "Phenotypic variability and not noise accounts for most of the cell-to-cell
-# heterogeneity in cytokine signaling", Topolewski et al. 2021
+# "Phenotypic variability, not noise, accounts for most of the cell-to-cell
+# heterogeneity of selected cytokine-induced JAK-STAT signaling responses", 
+# Topolewski et al. 2021
 
 #### set-up of directories ####
 base.path <- "D:/Piotrek/publications/syncytia_noise/phenotypic_variability"
 input.path <- paste(base.path, "/data", sep = "")
 
 #### loading libraries and functions ####
-source(paste(base.path, "/Topolewski_auxillary_functions.R", sep = ""))
-# all code noted as "aux code" is first introduced in the above auxillary file
+source(paste(base.path, "/Topolewski_auxiliary_functions.R", sep = ""))
+# all code noted as "aux code" is first introduced in the above auxiliary file
 
 #### data loading ####
 merge.chosen <- "no"
@@ -79,7 +80,7 @@ for(stim.type.chosen in chosen.stimulants){
       scale_color_manual(values = my.pal,
                          name = "dose [ng/mL]")+
       scale_fill_manual(values = my.pal,
-                        guide = FALSE)+
+                        guide = "none")+
       add_letter(LETTERS[letter.i], color = letter.color)+
       theme_trajectories(aspect.ratio = 1)+ # aux code
       theme(legend.position = c(x.text, y.text),
@@ -160,7 +161,7 @@ arranged.plots <- arrangeGrob(grobs = plots,
                                                     seq(12, 20, by = 2)))
 width <- 10/4*5
 height <- 8.5/3*4.5
-filename_suffix <- "Figure_S2.pdf"
+filename_suffix <- "Figure_S2a.pdf"
 
 
 path.to.save <- paste(base.path, "/figures", sep = "")
