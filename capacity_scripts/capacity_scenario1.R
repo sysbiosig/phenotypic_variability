@@ -1,9 +1,5 @@
 # A script depicting the channel capacity calculation 
-# for a scenario 1 from a paper:
-
-# "Phenotypic variability, not noise, accounts for most of the cell-to-cell
-# heterogeneity of selected cytokine-induced JAK-STAT signaling responses", 
-# Topolewski et al. 2021
+# for a scenario 1
 
 ## scenario 1: Population response distributions ##
 

@@ -1,7 +1,5 @@
-#### A script with auxiliary functions for a paper: ####
+#### A script with auxiliary functions ####
 
-# "Phenotypic variability and not noise accounts for most of the cell-to-cell
-# heterogeneity in cytokine signaling", Topolewski et al. 2021
 
 # first install the SLEMI package according to https://github.com/sysbiosig/SLEMI #
 

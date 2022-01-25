@@ -1,8 +1,4 @@
-# A script for reproducing the Figure S2 of a paper:
-
-# "Phenotypic variability, not noise, accounts for most of the cell-to-cell
-# heterogeneity of selected cytokine-induced JAK-STAT signaling responses", 
-# Topolewski et al. 2021
+# A script for reproducing the Figure S2 
 
 #### set-up of directories ####
 # either provide a path to the main directory, 

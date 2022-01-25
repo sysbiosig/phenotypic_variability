@@ -1,8 +1,5 @@
 # A script depicting the channel capacity calculation 
-# for a scenario 3 from a paper:
-
-# "Phenotypic variability and not noise accounts for most of the cell-to-cell
-# heterogeneity in cytokine signaling", Topolewski et al. 2021
+# for a scenario 3 
 
 ## scenario 3: Single-cell noise response distributions with continuous input ##
 
