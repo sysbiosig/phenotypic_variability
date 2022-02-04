@@ -1,7 +1,12 @@
 # phenotypic_variability
 The data sets, R scripts for channel capacity calculations and R scripts for figure reproducing of a paper:
 
+<<<<<<< HEAD
 "Phenotypic variability, not noise, accounts for most of the cell-to-cell heterogeneity in IFN-γ and oncostatin M signaling responses"
+=======
+"Phenotypic variability, not noise, accounts for most of the cell-to-cell heterogeneity in IFN-γ and oncostatin M signaling responses" 
+
+>>>>>>> 7aab868b0883c04b067807fdc3eb44c4d1dcf480
 Topolewski et al. 2022, Science Signaling
 
 All required libraries are either at the beginning of scripts or in "Topolewski_auxiliary_functions.R" script. 
